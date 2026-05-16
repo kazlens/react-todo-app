@@ -2,9 +2,9 @@ import ListItem from './ListItem'
 
 function List(props) {
   return (
-    <div className="w-full max-w-5xl mx-auto overflow-x-auto rounded-lg border border-white/20 bg-white/5">
+    <div className="mx-auto w-full max-w-5xl overflow-x-auto rounded-lg border border-slate-300 bg-white dark:border-white/20 dark:bg-white/5">
       <table className="w-full min-w-[680px] border-collapse text-left">
-        <thead className="bg-white/10 text-sm uppercase tracking-wide text-emerald-200">
+        <thead className="bg-slate-100 text-sm uppercase tracking-wide text-emerald-700 dark:bg-white/10 dark:text-emerald-200">
           <tr>
             <th className="w-16 px-4 py-3">#</th>
             <th className="w-28 px-4 py-3">Статус</th>
@@ -15,7 +15,7 @@ function List(props) {
         <tbody>
           {props.items.length === 0 ? (
             <tr>
-              <td className="px-4 py-8 text-center text-white/60" colSpan="4">
+              <td className="px-4 py-8 text-center text-slate-500 dark:text-white/60" colSpan="4">
                 Список задач пуст
               </td>
             </tr>

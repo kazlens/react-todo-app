@@ -40,11 +40,11 @@ function Form(props) {
 
   return (
     <form
-      className="mx-auto mb-4 flex w-full max-w-5xl flex-col gap-3 rounded-lg border border-white/20 bg-white/5 p-4 text-left shadow-sm md:flex-row md:items-end"
+      className="mx-auto mb-4 flex w-full max-w-5xl flex-col gap-3 rounded-lg border border-slate-300 bg-white p-4 text-left shadow-sm dark:border-white/20 dark:bg-white/5 md:flex-row md:items-end"
       onSubmit={handleSubmit}
     >
       <div className="flex flex-1 flex-col gap-2">
-        <label className="text-sm font-bold text-emerald-200" htmlFor="taskName">
+        <label className="text-sm font-bold text-emerald-600" htmlFor="taskName">
           Новая задача
         </label>
         <input
@@ -64,13 +64,13 @@ function Form(props) {
           value={taskName}
         />
         {error && (
-          <p className="text-sm font-medium text-red-300" id="taskNameError">
+          <p className="text-sm font-medium text-red-400" id="taskNameError">
             {error}
           </p>
         )}
       </div>
       <button
-        className="rounded-md bg-emerald-500 px-4 py-2 font-bold text-white hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300 disabled:cursor-not-allowed disabled:bg-white/20 disabled:text-white/50 md:w-auto"
+        className="rounded-md bg-emerald-500 px-4 py-2 font-bold text-white hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-300 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:text-white/70 md:w-auto"
         disabled={!taskName.trim()}
         type="submit"
       >

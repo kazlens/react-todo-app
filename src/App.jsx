@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import './App.css'
-import List from './components/List'
-import Form from './components/Form'
-import TaskControls from './components/TaskControls'
+import { NavLink, Route, Routes } from 'react-router-dom'
+import TasksPage from './pages/TasksPage'
+import ApiPage from './pages/ApiPage'
 
 const TASKS_STORAGE_KEY = 'minireact_tasks'
+const THEME_STORAGE_KEY = 'minireact_theme'
 
 const defaultTasks = [{
   id: 0,
@@ -13,52 +13,29 @@ const defaultTasks = [{
   done: false
 }]
 
-const normalizeTask = (task, index) => ({
-  id: Number.isInteger(task.id) ? task.id : index,
-  name: String(task.name ?? ''),
-  editing: false,
-  done: Boolean(task.done)
-})
-
-const getNextTaskId = (tasks) => {
-  if (tasks.length === 0) {
-    return 0
-  }
-
-  return Math.max(...tasks.map(task => task.id)) + 1
-}
-
 function App() {
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem(TASKS_STORAGE_KEY)
 
-    if (!savedTasks) {
-      return defaultTasks
-    }
-
-    try {
-      const parsedTasks = JSON.parse(savedTasks)
-
-      if (!Array.isArray(parsedTasks)) {
-        return defaultTasks
-      }
-
-      return parsedTasks.map(normalizeTask)
-    } catch {
-      return defaultTasks
-    }
+    return savedTasks ? JSON.parse(savedTasks) : defaultTasks
+  })
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem(THEME_STORAGE_KEY) || 'dark'
   })
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
 
   useEffect(() => {
-    const tasksToSave = tasks.map(({ id, name, done }) => ({ id, name, done }))
-    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasksToSave))
+    localStorage.setItem(THEME_STORAGE_KEY, theme)
+  }, [theme])
+
+  useEffect(() => {
+    localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks))
   }, [tasks])
 
   const createTask = (name) => {
     const task = {
-      id: getNextTaskId(tasks),
+      id: Date.now(),
       name,
       editing: false,
       done: false
@@ -119,27 +96,71 @@ function App() {
     return matchesSearch && matchesStatus
   })
 
+  const doneCount = tasks.filter(task => task.done).length
+
+  const changeTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
+
+  const linkClass = ({ isActive }) => {
+    if (isActive) {
+      return 'rounded-md bg-emerald-500 px-4 py-2 font-bold text-white'
+    }
+
+    return 'rounded-md border border-slate-400 px-4 py-2 font-bold text-slate-900 hover:bg-slate-200 dark:border-white/30 dark:text-white dark:hover:bg-white/10'
+  }
+
   return (
-    <>
-      <h1>To-Do List</h1>
-      <div className="w-full px-4 pb-8">
-        <Form createTask={createTask} />
-        <TaskControls
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          setStatusFilter={setStatusFilter}
-          statusFilter={statusFilter}
-        />
-        <List
-          cancelEditTask={cancelEditTask}
-          deleteTask={deleteTask}
-          items={visibleTasks}
-          saveTaskName={saveTaskName}
-          startEditTask={startEditTask}
-          toggleTaskIsDone={toggleTaskIsDone}
-        />
+    <div className={theme === 'dark' ? 'dark' : ''}>
+      <div className="min-h-screen bg-slate-100 text-slate-900 dark:bg-gray-900 dark:text-white">
+        <div className="mx-auto min-h-screen w-full max-w-6xl border-x border-slate-300 text-center dark:border-white/15">
+          <header className="border-b border-slate-300 px-4 py-5 dark:border-white/15">
+            <h1 className="text-4xl font-bold leading-tight md:text-5xl">To-Do List</h1>
+            <nav className="mt-4 flex flex-wrap justify-center gap-3">
+              <NavLink className={linkClass} to="/">
+                Задачи
+              </NavLink>
+              <NavLink className={linkClass} to="/api">
+                API
+              </NavLink>
+              <button
+                className="rounded-md border border-slate-400 px-4 py-2 font-bold text-slate-900 hover:bg-slate-200 dark:border-white/30 dark:text-white dark:hover:bg-white/10"
+                onClick={changeTheme}
+                type="button"
+              >
+                {theme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
+              </button>
+            </nav>
+          </header>
+
+          <main className="w-full px-4 py-6">
+            <Routes>
+              <Route
+                element={(
+                  <TasksPage
+                    cancelEditTask={cancelEditTask}
+                    createTask={createTask}
+                    deleteTask={deleteTask}
+                    doneCount={doneCount}
+                    items={visibleTasks}
+                    saveTaskName={saveTaskName}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    setStatusFilter={setStatusFilter}
+                    startEditTask={startEditTask}
+                    statusFilter={statusFilter}
+                    tasksCount={tasks.length}
+                    toggleTaskIsDone={toggleTaskIsDone}
+                  />
+                )}
+                path="/"
+              />
+              <Route element={<ApiPage tasksCount={tasks.length} />} path="/api" />
+            </Routes>
+          </main>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 

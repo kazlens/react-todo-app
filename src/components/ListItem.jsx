@@ -22,8 +22,8 @@ function ListItem(props) {
   }
 
   return (
-    <tr className="border-t border-white/10">
-      <td className="px-4 py-3 text-white/70">{props.index + 1}</td>
+    <tr className="border-t border-slate-200 dark:border-white/10">
+      <td className="px-4 py-3 text-slate-500 dark:text-white/70">{props.index + 1}</td>
       <td className="px-4 py-3">
         <input
           checked={props.item.done}
@@ -44,7 +44,7 @@ function ListItem(props) {
             />
           </form>
         ) : (
-          <span className={props.item.done ? 'text-white/50 line-through' : 'text-white'}>
+          <span className={props.item.done ? 'text-slate-400 line-through dark:text-white/50' : 'text-slate-900 dark:text-white'}>
             {props.item.name}
           </span>
         )}
@@ -61,7 +61,7 @@ function ListItem(props) {
                 Сохранить
               </button>
               <button
-                className="rounded-md border border-white/30 px-3 py-2 text-sm font-bold text-white hover:bg-white/10"
+                className="rounded-md border border-slate-400 px-3 py-2 text-sm font-bold text-slate-900 hover:bg-slate-100 dark:border-white/30 dark:text-white dark:hover:bg-white/10"
                 onClick={handleCancel}
                 type="button"
               >
@@ -71,14 +71,14 @@ function ListItem(props) {
           ) : (
             <>
               <button
-                className="rounded-md border border-emerald-400 px-3 py-2 text-sm font-bold text-emerald-100 hover:bg-emerald-500/20"
+                className="rounded-md border border-emerald-400 px-3 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-500/10"
                 onClick={() => props.startEditTask(props.item.id)}
                 type="button"
               >
                 Изменить
               </button>
               <button
-                className="rounded-md border border-red-400 px-3 py-2 text-sm font-bold text-red-100 hover:bg-red-500/20"
+                className="rounded-md border border-red-400 px-3 py-2 text-sm font-bold text-red-500 hover:bg-red-500/10"
                 onClick={() => props.deleteTask(props.item.id)}
                 type="button"
               >
